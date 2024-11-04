@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.2/p5.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/rhino3dm@8.9.0/rhino3dm.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js",
+          "three/examples/jsm/controls/OrbitControls": "https://unpkg.com/three@0.158.0/examples/jsm/controls/OrbitControls.js",
+          "three/examples/jsm/loaders/3DMLoader": "https://unpkg.com/three@0.158.0/examples/jsm/loaders/3DMLoader.js",
+          "rhino3dm":"https://unpkg.com/rhino3dm@8.0.0-beta3/rhino3dm.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"
+        }
+      }
+    </script>
+    <meta charset="utf-8" />
+    <style>
+      @keyframes buttonClickAnimation {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+      }
+
+      .animate-button {
+        animation: buttonClickAnimation 0.3s ease-in-out;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <canvas id="p5-canvas"></canvas>
+
+      <canvas id="three-canvas"></canvas>
+      <button style="position: fixed; bottom: 10px; left: 10px; padding: 15px 25px; border-radius: 12px;">Compute with Rhino & Grasshoppper</button>
+      <div style="position: fixed; bottom: 10px; left: 50%; transform: translateX(-150%); font-weight: bold; font-family: Arial, sans-serif;">2D</div>
+      <div style="position: fixed; bottom: 10px; left: 50%; transform: translateX(75%); font-weight: bold; font-family: Arial, sans-serif; color: white;">3D</div>
+
+
+    </main>
+
+    <!-- Dummy layout data -->
+    <script src="dc.js"></script> 
+
+    <!-- JS -->
+    <script src="utils.js"></script>
+    <script src="spatialGraph.js"></script>
+    <script src="2d.js"></script>
+    <script type="module" src="3d.js"></script>
+
+
+  </body>
+</html>
