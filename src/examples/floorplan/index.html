@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="data:,">
+  <title>Skid Configurator Mockup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+      color: #003865;
+      /* Set text color */
+    }
+
+    canvas {
+      width: 80%;
+      height: calc(100vh - 50px);
+      margin-left: 20%;
+      margin-top: 50px;
+    }
+
+    .dropdown-container {
+      margin: 10px;
+    }
+
+    #numberDropdown {
+      width: 100px;
+      /* Adjust width as needed */
+      padding: 2px;
+      /* Add padding for better spacing */
+      border: 1px solid #ccc;
+      /* Light grey border */
+      border-radius: 5px;
+      /* Rounded corners */
+      background-color: #f9f9f9;
+      /* Light background color */
+      font-size: 16px;
+      /* Increase font size */
+      color: #333;
+      /* Text color */
+      appearance: none;
+      /* Remove default dropdown arrow */
+      background-image: url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjMDAwMDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMCIgaGVpZ2h0PSI2IiB2aWV3Qm94PSIwIDAgMTAgNiI+PHBhdGggZD0iTTAgMGw1IDUgNS01eiIvPjwvc3ZnPg==');
+      /* Custom arrow */
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+    }
+
+    #numberDropdown:focus {
+      border-color: #66afe9;
+      /* Blue border on focus */
+      outline: none;
+      /* Remove default outline */
+      box-shadow: 0 0 5px rgba(102, 175, 233, 0.6);
+      /* Add shadow on focus */
+    }
+
+    /* Hide the default checkbox */
+    input[type="checkbox"] {
+      display: none;
+    }
+
+    /* Create a custom checkbox */
+    input[type="checkbox"]+label {
+      position: relative;
+      padding-left: 25px;
+      /* Space for the custom checkbox */
+      cursor: pointer;
+      display: inline-block;
+      color: #333;
+      /* Text color */
+      font-size: 16px;
+      /* Font size */
+    }
+
+    /* Custom checkbox style */
+    input[type="checkbox"]+label:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #003865;
+      /* Border color */
+      border-radius: 3px;
+      /* Rounded corners */
+      background: #fff;
+      /* Background color */
+    }
+
+    /* Checked state */
+    input[type="checkbox"]:checked+label:before {
+      background: #003865;
+      /* Background color when checked */
+      border-color: #003865;
+      /* Border color when checked */
+    }
+
+    /* Checkmark */
+    input[type="checkbox"]:checked+label:after {
+      content: '';
+      position: absolute;
+      left: 5px;
+      top: 2px;
+      width: 6px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      margin: 10px 10px;
+      /* Add margin on left and right */
+      margin-top: -10px;
+    }
+
+    .slider-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin: 10px 10px;
+      /* Add margin on left and right */
+      margin-top: -10px;
+
+    }
+
+    .slider {
+      width: calc(100% - 60px);
+      /* Adjust width to account for margins and value display */
+      accent-color: #003865;
+      -webkit-appearance: none;
+      /* Remove default styling */
+      appearance: none;
+      /* Remove default styling */
+      height: 8px;
+      /* Height of the slider */
+      background: #ddd;
+      /* Background color of the slider */
+      border-radius: 5px;
+      /* Rounded corners */
+      outline: none;
+      /* Remove outline */
+      opacity: 0.7;
+      /* Slightly transparent */
+      transition: opacity 0.2s;
+      /* Transition effect */
+    }
+
+    .slider:hover {
+      opacity: 1;
+      /* Fully opaque on hover */
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      /* Remove default styling */
+      appearance: none;
+      /* Remove default styling */
+      width: 20px;
+      /* Width of the thumb */
+      height: 20px;
+      /* Height of the thumb */
+      background: #003865;
+      /* Color of the thumb */
+      border-radius: 50%;
+      /* Rounded thumb */
+      cursor: pointer;
+      /* Pointer cursor on hover */
+    }
+
+    .slider::-moz-range-thumb {
+      width: 20px;
+      /* Width of the thumb */
+      height: 20px;
+      /* Height of the thumb */
+      background: #003865;
+      /* Color of the thumb */
+      border-radius: 50%;
+      /* Rounded thumb */
+      cursor: pointer;
+      /* Pointer cursor on hover */
+    }
+
+    .slider-container span {
+      margin-top: 5px;
+      /* Space between slider and value */
+      font-weight: bold;
+    }
+
+    #container {
+      position: relative;
+    }
+
+    #container canvas,
+    #overlay {
+      position: absolute;
+    }
+
+    #overlay {
+      z-index: 1;
+      width: 20%;
+      height: calc(100vh - 50px);
+      left: 0;
+      top: 50px;
+      background-color: white;
+      /* Optional: to make it visible */
+      border-right: 1px solid black;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      color: #003865;
+      /* Set text color inside overlay */
+    }
+
+    #overlay div {
+      padding: 5px;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 50px;
+      background-color: white;
+      color: #003865;
+      /* Set text color in navbar */
+      display: flex;
+      align-items: center;
+      z-index: 3;
+      border-bottom: 1px solid black;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      padding: 0 20px;
+    }
+
+    nav .logo {
+      max-height: 80px;
+      /* Adjust this value as needed */
+    }
+
+    nav ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+
+    nav ul li {
+      margin: 0 15px;
+    }
+
+    nav ul li a {
+      color: #003865;
+      /* Set link color */
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <img src="./logo_heijmans_synergy.png" class="logo">
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </nav>
+  <div id="container">
+    <div id="overlay">
+      <!-- /////////////////////////////////////////////////////////////////////////// -->
+      <div class="dropdown-container">
+        <label for="ProfielType">Type Profiel</label>
+        <select name="numberDropdown" id="ProfielType">
+          <option value="40">40x40</option>
+          <option value="50">50x50</option>
+          <option value="60">60x60</option>
+        </select>
+      </div>
+      <div class="slider-container">
+        <label for="SkidLengte">Lengte Skid</label>
+        <input type="range" class="slider" id="SkidLengte" name="SkidLengte" min="2400" max="5400" value="3600"
+          step="600">
+        <span id="SkidLengte-value">50</span>
+      </div>
+      <div class="checkbox-container">
+        <input type="checkbox" id="LuchtAanwezig" checked>
+        <label for="LuchtAanwezig">Lucht</label>
+      </div>
+      <div class="slider-container">
+        <label for="LuchtHoogte">Hoogte Luchtkanalen</label>
+        <input type="range" id="LuchtHoogte" class="slider" name="LuchtHoogte" min="50" max="400" value="200" step="50">
+        <span id="LuchtHoogte-value">50</span>
+      </div>
+      <div class="slider-container">
+        <input type="range" id="LuchtBreedte" class="slider" name="LuchtBreedte" min="100" max="800" value="400"
+          step="50">
+        <label for="LuchtBreedte">Breedte Luchtkanalen</label>
+        <span id="LuchtBreedte-value">50</span>
+      </div>
+      <div class="checkbox-container">
+        <input type="checkbox" id="ElektraAanwezig" checked>
+        <label for="ElektraAanwezig">Elektra</label>
+      </div>
+      <div class="slider-container">
+        <label for="ElektraHoogte">Hoogte Elektra</label>
+        <input type="range" id="ElektraHoogte" class="slider" name="ElektraHoogte" min="60" max="100" value="80"
+          step="10">
+        <span id="ElektraHoogte-value">50</span>
+      </div>
+      <div class="slider-container">
+        <label for="Elektrabreedte">Breedte Elektra</label>
+        <input type="range" id="ElektraBreedte" class="slider" name="ElektraBreedte" min="100" max="600" value="240"
+          step="10">
+        <span id="ElektraBreedte-value">50</span>
+      </div>
+      <div class="checkbox-container">
+        <input type="checkbox" id="KlimaatAanwezig" checked>
+        <label for="KlimaatAanwezig">Verwarming/Koeling</label>
+      </div>
+      <div class="slider-container">
+        <label for="KlimaatDiameter">Diameter Verwarming/Koeling</label>
+        <input type="range" id="KlimaatDiameter" class="slider" name="KlimaatDiameter" min="50" max="250" value="200"
+          step="50">
+        <span id="KlimaatDiameter-value">50</span>
+      </div>
+      <div class="checkbox-container">
+        <input type="checkbox" id="WaterAanwezig" checked>
+        <label for="WaterAanwezig">Water</label>
+      </div>
+      <div class="slider-container">
+        <label for="WaterDiameter">Diameter Water</label>
+        <input type="range" id="WaterDiameter" class="slider" name="WaterDiameter" min="12" max="28" value="28"
+          step="1">
+        <span id="WaterDiameter-value">50</span>
+      </div>
+
+      <!-- /////////////////////////////////////////////////////////////////////////// -->
+      <div><button id="downloadButton" disabled>Download .3dm</button></div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Initialize slider values
+      document.querySelectorAll('.slider').forEach(slider => {
+        const valueSpan = document.getElementById(`${slider.id}-value`);
+        valueSpan.textContent = `${slider.value}mm`;
+      });
+
+      // Add event listeners for input changes
+      document.querySelectorAll('.slider').forEach(slider => {
+        slider.addEventListener('input', function () {
+          const valueSpan = document.getElementById(`${this.id}-value`);
+          valueSpan.textContent = `${this.value}mm`;
+        });
+      });
+    });
+  </script>
+
+  <!-- Import maps polyfill -->
+  <!-- Remove this when import maps will be widely supported -->
+  <script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
+
+  <script type="importmap">
+            {
+              "imports": {
+                "three": "https://unpkg.com/three@0.156.1/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.156.1/examples/jsm/",
+                "three/examples/jsm/controls/OrbitControls": "https://unpkg.com/three@0.156.1/examples/jsm/controls/OrbitControls.js",
+                "three/examples/jsm/loaders/3DMLoader": "https://unpkg.com/three@0.156.1/examples/jsm/loaders/3DMLoader.js",
+                "rhino3dm":"https://unpkg.com/rhino3dm@8.0.0-beta/rhino3dm.module.js"
+              }
+            }
+        </script>
+
+  <!-- SpatialGraph stuff -->
+
+
+
+  <!-- PixiJS -->
+  <script src="https://pixijs.download/release/pixi.js"></script>
+  <script src="dc.js"></script>
+  <script type="module" src="./main.js"></script>
+
+
+</body>
+
+</html>
