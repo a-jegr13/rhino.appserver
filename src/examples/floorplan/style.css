@@ -1,0 +1,295 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'Poppins', sans-serif;
+  color: #003865;
+  /* Set text color */
+}
+
+canvas {
+  width: 80%;
+  height: calc(100vh - 100px);
+  margin-left: 20%;
+  margin-top: 100px;
+}
+
+.dropdown-container {
+  margin: 10px;
+}
+
+#numberDropdown {
+  width: 100px;
+  /* Adjust width as needed */
+  padding: 2px;
+  /* Add padding for better spacing */
+  border: 1px solid #ccc;
+  /* Light grey border */
+  border-radius: 5px;
+  /* Rounded corners */
+  background-color: #f9f9f9;
+  /* Light background color */
+  font-size: 16px;
+  /* Increase font size */
+  color: #333;
+  /* Text color */
+  appearance: none;
+  /* Remove default dropdown arrow */
+  background-image: url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjMDAwMDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMCIgaGVpZ2h0PSI2IiB2aWV3Qm94PSIwIDAgMTAgNiI+PHBhdGggZD0iTTAgMGw1IDUgNS01eiIvPjwvc3ZnPg==');
+  /* Custom arrow */
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+#numberDropdown:focus {
+  border-color: #66afe9;
+  /* Blue border on focus */
+  outline: none;
+  /* Remove default outline */
+  box-shadow: 0 0 5px rgba(102, 175, 233, 0.6);
+  /* Add shadow on focus */
+}
+
+/* Hide the default checkbox */
+input[type="checkbox"] {
+  display: none;
+}
+
+/* Create a custom checkbox */
+input[type="checkbox"]+label {
+  position: relative;
+  padding-left: 25px;
+  /* Space for the custom checkbox */
+  cursor: pointer;
+  display: inline-block;
+  color: #333;
+  /* Text color */
+  font-size: 16px;
+  /* Font size */
+}
+
+/* Custom checkbox style */
+input[type="checkbox"]+label:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #003865;
+  /* Border color */
+  border-radius: 3px;
+  /* Rounded corners */
+  background: #fff;
+  /* Background color */
+}
+
+/* Checked state */
+input[type="checkbox"]:checked+label:before {
+  background: #003865;
+  /* Background color when checked */
+  border-color: #003865;
+  /* Border color when checked */
+}
+
+/* Checkmark */
+input[type="checkbox"]:checked+label:after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  margin: 10px 10px;
+  /* Add margin on left and right */
+  margin-top: -10px;
+}
+
+.slider-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 10px 10px;
+  /* Add margin on left and right */
+  margin-top: -10px;
+
+}
+
+.slider {
+  width: calc(100% - 60px);
+  /* Adjust width to account for margins and value display */
+  accent-color: #003865;
+  -webkit-appearance: none;
+  /* Remove default styling */
+  appearance: none;
+  /* Remove default styling */
+  height: 8px;
+  /* Height of the slider */
+  background: #ddd;
+  /* Background color of the slider */
+  border-radius: 5px;
+  /* Rounded corners */
+  outline: none;
+  /* Remove outline */
+  opacity: 0.7;
+  /* Slightly transparent */
+  transition: opacity 0.2s;
+  /* Transition effect */
+}
+
+.slider:hover {
+  opacity: 1;
+  /* Fully opaque on hover */
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  /* Remove default styling */
+  appearance: none;
+  /* Remove default styling */
+  width: 20px;
+  /* Width of the thumb */
+  height: 20px;
+  /* Height of the thumb */
+  background: #003865;
+  /* Color of the thumb */
+  border-radius: 50%;
+  /* Rounded thumb */
+  cursor: pointer;
+  /* Pointer cursor on hover */
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  /* Width of the thumb */
+  height: 20px;
+  /* Height of the thumb */
+  background: #003865;
+  /* Color of the thumb */
+  border-radius: 50%;
+  /* Rounded thumb */
+  cursor: pointer;
+  /* Pointer cursor on hover */
+}
+
+.slider-container span {
+  margin-top: 5px;
+  /* Space between slider and value */
+  font-weight: bold;
+}
+
+#container {
+  position: relative;
+}
+
+#container canvas,
+#overlay {
+  position: absolute;
+}
+
+#overlay {
+  z-index: 1;
+  width: 20%;
+  height: calc(100vh - 50px);
+  left: 0;
+  top: 50px;
+  background-color: white;
+  /* Optional: to make it visible */
+  border-right: 1px solid black;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  color: #003865;
+  /* Set text color inside overlay */
+}
+
+#overlay div {
+  padding: 5px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 50px;
+  background-color: white;
+  color: #003865;
+  /* Set text color in navbar */
+  display: flex;
+  align-items: center;
+  z-index: 3;
+  border-bottom: 1px solid black;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 0 20px;
+}
+
+nav .logo {
+  max-height: 80px;
+  /* Adjust this value as needed */
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+nav ul li {
+  margin: 0 15px;
+}
+
+nav ul li a {
+  color: #003865;
+  /* Set link color */
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.toolbar {
+  background-color: #ffffff;
+  padding: 10px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+  width: 80%;
+  margin-left:20%;
+  margin-top: 50px;
+  position: absolute;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.toolbar button {
+  margin-right: 10px;
+  padding: 5px 10px;
+  border: none;
+  background-color: #003865;
+  color: white;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 10px;
+}
+
+.toolbar button:hover {
+  background-color: #0056b3;
+}

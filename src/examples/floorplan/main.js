@@ -1,70 +1,73 @@
-import { SpatialGraph } from './spatialGraph.js';
-import * as Utils from './utils.js';
+import * as Globals from './globals.js';
+import { Room } from './graphics.js';
+
+(async () =>
+    {
+
+        // Create a new application
+        const app = new PIXI.Application();
+        await app.init({ background: 0xf0fbfc, resizeTo: window, antialias: true });
+        document.body.appendChild(app.canvas);
+
+        app.stage.addChild(Globals.backGroundContainer);
+        app.stage.addChild(Globals.graphContainer);
+        
+
+        // Function to draw the gridlines
+        function drawGrid() {
+            const grid = new PIXI.Graphics();
+            const gridSize = 50; // Size of each grid cell
 
 
+            // Draw vertical lines
+            for (let x = 0; x <= app.screen.width; x += gridSize) {
+                grid.moveTo(x, 0);
+                grid.lineTo(x, app.screen.height)
+                grid.stroke({texture: PIXI.Texture.WHITE,  width: 1, color: 0xe8e8e8});
+                ;
+            }
 
-// Create the application helper and add its render target to the page
-const app = new PIXI.Application();
-await app.init({
-    antialias: true,
-    transparent: false,
-    resolution: window.devicePixelRatio || 1,
-    backgroundColor: 0x00FF00
-})
-document.body.appendChild(app.canvas);
+            // Draw horizontal lines
+            for (let y = 0; y <= app.screen.height; y += gridSize) {
+                grid.moveTo(0, y);
+                grid.lineTo(app.screen.width, y)
+                grid.stroke({texture: PIXI.Texture.WHITE,  width: 1, color: 0xe8e8e8});
+                ;
+            }
 
-const coordDict = {};
-// Create list with points to create the graph
-const polygons = Utils.getPolygons(dc)
-for (let i = 0; i < polygons.length; i++) {
-    let coords = Utils.parseWKTPolygon(polygons[i]);
-    coordDict[i] = coords.slice(0, 4);
-}
-
-// Create the graph
-let spatialGraph = new SpatialGraph();
-for (let key in coordDict) {
-    spatialGraph.addSpace(coordDict[key]);
-}
+            Globals.backGroundContainer.addChild(grid);
+        }
 
 
+        // Function to draw the spatial graph
+        function drawSpatialGraph() {
+            // Globals.spatialGraph.edges.forEach(edge => {
+            //     const wall = new Wall(Globals.graphContainer, edge.v1.x, edge.v1.y, edge.v2.x, edge.v2.y);
+            // });
+            Globals.spatialGraph.spaces.forEach(space => {
+                const room = new Room(Globals.graphContainer, space);
+            });
+        }
 
-// Draw vertices and edges using PixiJS
-function drawGraph() {
-    spatialGraph.vertices.forEach(vertex => {
-        const graphics = new PIXI.Graphics();
-        graphics.beginFill(0x003865);
-        graphics.drawCircle(vertex.x, vertex.y, 5);
-        graphics.endFill();
-        app.stage.addChild(graphics);
-    });
+        // Initial draw
+        drawGrid();
 
-    spatialGraph.edges.forEach(edge => {
-        const graphics = new PIXI.Graphics();
-        graphics.lineStyle(4, 0xFFFFFF); // White color for edges and thicker lines
-        graphics.moveTo(edge.v1.x, edge.v1.y);
-        graphics.lineTo(edge.v2.x, edge.v2.y);
-        graphics.endFill();
-        app.stage.addChild(graphics);
-    });
-}
+        drawSpatialGraph();
+       
 
-// Draw the graph
-drawGraph();
+        // Move the container to the center
+        Globals.graphContainer.x = app.screen.width / 2;
+        Globals.graphContainer.y = app.screen.height / 2;
+    
 
-// Function to zoom out and fit the contents
-function fitToScreen() {
-    const bounds = app.stage.getBounds();
-    const scaleX = app.screen.width / bounds.width;
-    const scaleY = app.screen.height / bounds.height;
-    const scale = Math.min(scaleX, scaleY);
+        Globals.graphContainer.pivot.x = Globals.graphContainer.width / 2;
+        Globals.graphContainer.pivot.y = Globals.graphContainer.height / 2;
 
-    app.stage.scale.set(scale);
-    app.stage.position.set(
-        (app.screen.width - bounds.width * scale) / 2 - bounds.x * scale,
-        (app.screen.height - bounds.height * scale) / 2 - bounds.y * scale
-    );
-}
-
-// Fit the contents to the screen
-fitToScreen();
+        // Listen for animate update
+        app.ticker.add((time) =>
+        {
+            // Continuously rotate the container!
+            // * use delta to create frame-independent transform *
+            // container.rotation -= 0.01 * time.deltaTime;
+        });
+    })();

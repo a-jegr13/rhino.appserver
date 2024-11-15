@@ -43,6 +43,7 @@
     "start-args": "node ./src/bin/www --computeUrl http://localhost:6500/"
   },
   "dependencies": {
+    "@flatten-js/core": "^1.6.2",
     "camelcase-keys": "^6.2.2",
     "compression": "1.7.4",
     "compute-rhino3d": "^0.13.0-beta",
@@ -56,6 +57,7 @@
     "morgan": "~1.9.1",
     "node-cache": "^5.1.1",
     "node-fetch": "2.6.7",
+    "pixi.js": "^8.5.2",
     "rhino3dm": "7.15.0",
     "throng": "4.0.0"
   },
